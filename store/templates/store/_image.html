@@ -1,0 +1,11 @@
+{% comment %}
+Usage: {% include "store/_image.html" with img=some.imagefield label="Store photo" %}
+Renders the real uploaded image if present, otherwise an elegant styled
+placeholder block so the layout always looks intentional before real
+photos are uploaded.
+{% endcomment %}
+{% if img %}
+  <img src="{{ img.url }}" alt="{{ label|default:'' }}" loading="lazy">
+{% else %}
+  <div class="placeholder-block"><span>{{ label|default:"Image" }}</span></div>
+{% endif %}

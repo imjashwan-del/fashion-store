@@ -1,0 +1,64 @@
+{% extends "dashboard/_base.html" %}
+{% block title %}Order {{ order.order_number }}{% endblock %}
+{% block page_title %}Order {{ order.order_number }}{% endblock %}
+{% block dash_content %}
+
+<div class="dash-form-grid">
+  <div class="dash-card">
+    <h2>Customer &amp; Delivery</h2>
+    <p><strong>{{ order.customer_name }}</strong></p>
+    <p>{{ order.phone }}</p>
+    <p>{{ order.address }}</p>
+    <p>{{ order.city }} &ndash; {{ order.pincode }}</p>
+    {% if order.distance_km is not None %}
+      <div class="map-mini-note">
+        Verified delivery distance: {{ order.distance_km }} km from store
+        (captured via customer device location at checkout).
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="dash-card">
+    <h2>Status</h2>
+    <p>Current status: <span class="status-pill {{ order.status }}">{{ order.get_status_display }}</span></p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-field" style="margin-bottom:16px;">
+        <label for="statusSelect">Update Status</label>
+        <select name="status" id="statusSelect">
+          {% for value, label in order.STATUS_CHOICES %}
+            <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="dash-btn primary full">Update Status</button>
+    </form>
+    <p style="margin-top:14px; font-size:12px; color:var(--dash-muted);">Order placed: {{ order.created_at|date:"d M Y, H:i" }}</p>
+  </div>
+</div>
+
+<div class="dash-card">
+  <h2>Items</h2>
+  <div class="dash-table-wrap">
+    <table class="dash-table">
+      <thead><tr><th>Product</th><th>Quantity</th><th>Price</th><th>Subtotal</th></tr></thead>
+      <tbody>
+        {% for item in order.items.all %}
+        <tr>
+          <td>{{ item.product_name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>&#8377;{{ item.price|floatformat:0 }}</td>
+          <td>&#8377;{{ item.subtotal|floatformat:0 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr><td colspan="3" style="text-align:right; font-weight:600;">Total</td><td style="font-weight:600;">&#8377;{{ order.total_amount|floatformat:0 }}</td></tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+<a href="{% url 'dashboard:orders' %}" class="dash-btn">&larr; Back to Orders</a>
+
+{% endblock %}

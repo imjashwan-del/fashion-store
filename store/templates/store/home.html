@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ store.shop_name }}{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+  <div class="hero-media">
+    {% include "store/_image.html" with img=store.hero_image label="Hero campaign image" %}
+  </div>
+  <div class="hero-content">
+    <span class="eyebrow">New Collection</span>
+    <h1>{{ store.tagline }}</h1>
+    <p>{{ store.hero_subtext }}</p>
+    <div class="hero-actions">
+      <a href="{% url 'store:shop' %}" class="btn btn-primary">Shop Collection</a>
+      <a href="{% url 'store:shop' %}?featured=1" class="btn btn-outline on-dark">Explore New Arrivals</a>
+    </div>
+  </div>
+</section>
+
+<div class="delivery-banner">
+  &#128666; <strong>Local Delivery Available Within {{ store.delivery_radius_km|floatformat:0 }} KM</strong> of our store
+</div>
+
+<section id="categories">
+  <div class="container">
+    <div class="section-head fade-in-up">
+      <span class="eyebrow">Shop by</span>
+      <h2>Featured Categories</h2>
+      <p>Explore our curated edits, made for every part of your wardrobe.</p>
+    </div>
+    <div class="category-grid">
+      {% for category in categories %}
+      <a href="{{ category.get_absolute_url }}" class="category-card fade-in-up">
+        <div class="cat-media">
+          {% include "store/_image.html" with img=category.image label=category.name %}
+        </div>
+        <div class="cat-label">
+          <h3>{{ category.name }}</h3>
+          <span class="explore">Explore &rarr;</span>
+        </div>
+      </a>
+      {% empty %}
+        <p>Categories will appear here once added from the owner dashboard.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section style="background: var(--color-surface);">
+  <div class="container">
+    <div class="section-head fade-in-up">
+      <span class="eyebrow">Handpicked</span>
+      <h2>Featured Products</h2>
+      <p>A closer look at pieces our customers keep coming back for.</p>
+    </div>
+    <div class="product-grid">
+      {% for product in featured_products %}
+        {% include "store/_product_card.html" %}
+      {% empty %}
+        <p>Products will appear here once added from the owner dashboard.</p>
+      {% endfor %}
+    </div>
+    <div class="section-cta">
+      <a href="{% url 'store:shop' %}" class="btn btn-outline">View All Products</a>
+    </div>
+  </div>
+</section>
+
+{% if store.festive_offer_active %}
+<section>
+  <div class="container">
+    <div class="festive-banner fade-in-up">
+      <span class="eyebrow">{{ store.festive_offer_title }}</span>
+      <h2>{{ store.festive_offer_text }}</h2>
+      <a href="{% url 'store:shop' %}?category=festive-collection" class="btn btn-accent">Shop Festive Collection</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section id="about" class="about-section">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-media fade-in-up">
+        {% include "store/_image.html" with img=store.store_exterior_image label="Store photo" %}
+      </div>
+      <div class="about-content fade-in-up">
+        <span class="eyebrow">Our Story</span>
+        <h2>About {{ store.shop_name }}</h2>
+        <p>{{ store.about_text }}</p>
+
+        <div class="about-owner">
+          <div class="owner-avatar">
+            {% include "store/_image.html" with img=store.owner_image label="Owner" %}
+          </div>
+          <div>
+            <strong>{{ store.owner_name }}</strong>
+            <span>Founder / Owner</span>
+          </div>
+        </div>
+
+        <ul class="about-meta">
+          <li><span class="ico">&#128205;</span> {{ store.address }}</li>
+          <li><span class="ico">&#128222;</span> {{ store.phone }}</li>
+          <li><span class="ico">&#128248;</span> {{ store.instagram_handle }}</li>
+          <li><span class="ico">&#128337;</span> {{ store.opening_hours }}</li>
+        </ul>
+
+        <div class="about-actions" id="contact">
+          <a href="tel:{{ store.phone }}" class="btn btn-primary">Call Store</a>
+          <a href="{{ store.instagram_url }}" target="_blank" rel="noopener" class="btn btn-outline">Visit Instagram</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="gallery-grid">
+      <div class="gallery-item fade-in-up">{% include "store/_image.html" with img=store.store_exterior_image label="Store exterior" %}</div>
+      <div class="gallery-item fade-in-up">{% include "store/_image.html" with img=store.store_interior_image label="Store interior" %}</div>
+      <div class="gallery-item fade-in-up">{% include "store/_image.html" with img=store.owner_image label="Owner" %}</div>
+      <div class="gallery-item fade-in-up">{% include "store/_image.html" with img=store.new_collection_image label="New collection" %}</div>
+      <div class="gallery-item fade-in-up">{% include "store/_image.html" with img=store.festival_display_image label="Festival display" %}</div>
+    </div>
+  </div>
+</section>
+
+<section class="instagram-section">
+  <div class="container">
+    <span class="eyebrow">Follow Our Latest Looks</span>
+    <h2 class="instagram-handle">{{ store.instagram_handle }}</h2>
+    <div class="instagram-grid">
+      {% for i in "12345" %}
+        <div class="placeholder-block"><span>Instagram</span></div>
+      {% endfor %}
+    </div>
+    <a href="{{ store.instagram_url }}" target="_blank" rel="noopener" class="btn btn-primary">Follow on Instagram</a>
+  </div>
+</section>
+
+{% endblock %}

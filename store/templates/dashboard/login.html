@@ -1,0 +1,42 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Store Management &mdash; Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'store/css/dashboard.css' %}">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+<div class="dash-login-wrap">
+  <div class="dash-login-card">
+    <div class="brand">{{ store.shop_name }}</div>
+    <h1>Store Management</h1>
+    <p class="subtitle">Sign in to manage orders, products and store settings.</p>
+
+    {% if messages %}
+      <div class="dash-messages">
+        {% for message in messages %}<div class="dash-message {{ message.tags }}">{{ message }}</div>{% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-field" style="margin-bottom:16px;">
+        <label for="{{ form.username.id_for_label }}">Username</label>
+        {{ form.username }}
+      </div>
+      <div class="form-field" style="margin-bottom:22px;">
+        <label for="{{ form.password.id_for_label }}">Password</label>
+        {{ form.password }}
+      </div>
+      {% if form.errors %}
+        <div class="dash-message error" style="margin-bottom:18px;">Invalid username or password, or this account does not have management access.</div>
+      {% endif %}
+      <button type="submit" class="dash-btn primary full">Sign In</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

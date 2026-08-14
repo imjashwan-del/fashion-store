@@ -1,0 +1,37 @@
+{% extends "dashboard/_base.html" %}
+{% block title %}Orders{% endblock %}
+{% block page_title %}Orders{% endblock %}
+{% block dash_content %}
+
+<div class="dash-filters">
+  <a href="{% url 'dashboard:orders' %}" class="{% if not status_filter %}active{% endif %}">All</a>
+  {% for value, label in status_choices %}
+    <a href="?status={{ value }}" class="{% if status_filter == value %}active{% endif %}">{{ label }}</a>
+  {% endfor %}
+</div>
+
+<div class="dash-card">
+  <div class="dash-table-wrap">
+    <table class="dash-table">
+      <thead><tr><th>Order #</th><th>Customer</th><th>Phone</th><th>City</th><th>Total</th><th>Status</th><th>Date</th><th></th></tr></thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <td>{{ order.order_number }}</td>
+          <td>{{ order.customer_name }}</td>
+          <td>{{ order.phone }}</td>
+          <td>{{ order.city }}</td>
+          <td>&#8377;{{ order.total_amount|floatformat:0 }}</td>
+          <td><span class="status-pill {{ order.status }}">{{ order.get_status_display }}</span></td>
+          <td>{{ order.created_at|date:"d M, H:i" }}</td>
+          <td><a href="{% url 'dashboard:order_detail' order.order_number %}" class="dash-btn">View</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8">No orders found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

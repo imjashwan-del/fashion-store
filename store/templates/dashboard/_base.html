@@ -1,0 +1,42 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Dashboard{% endblock %} &mdash; Store Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'store/css/dashboard.css' %}">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body class="dashboard-body">
+<div class="dash-shell">
+  <aside class="dash-sidebar">
+    <div class="brand">{{ store.shop_name }}<small>Store Management</small></div>
+    <nav class="dash-nav">
+      <a href="{% url 'dashboard:home' %}" class="{% if active == 'home' %}active{% endif %}">&#9670; Dashboard</a>
+      <a href="{% url 'dashboard:orders' %}" class="{% if active == 'orders' %}active{% endif %}">&#128230; Orders</a>
+      <a href="{% url 'dashboard:products' %}" class="{% if active == 'products' %}active{% endif %}">&#128100; Products</a>
+      <a href="{% url 'dashboard:categories' %}" class="{% if active == 'categories' %}active{% endif %}">&#9776; Categories</a>
+      <a href="{% url 'dashboard:settings' %}" class="{% if active == 'settings' %}active{% endif %}">&#9881; Store Settings</a>
+      <a href="{% url 'dashboard:logout' %}" class="logout-link">&#8592; Logout</a>
+    </nav>
+  </aside>
+  <main class="dash-main">
+    <div class="dash-topbar">
+      <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+      <span class="welcome">Signed in as {{ request.user.username }}</span>
+    </div>
+
+    {% if messages %}
+    <div class="dash-messages">
+      {% for message in messages %}
+        <div class="dash-message {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block dash_content %}{% endblock %}
+  </main>
+</div>
+</body>
+</html>

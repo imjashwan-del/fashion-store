@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Order Received{% endblock %}
+{% block content %}
+
+<div class="confirmation-wrap">
+  <div class="confirmation-icon">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#3c6e47" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <span class="eyebrow">Order Received</span>
+  <h1 style="font-size:34px;">Thank You, {{ order.customer_name }}!</h1>
+  <p>Thank you for shopping with {{ store.shop_name }}. The store will contact you shortly to confirm your order.</p>
+
+  <div class="order-number-chip">{{ order.order_number }}</div>
+
+  <div class="form-card" style="text-align:left; margin-top:30px;">
+    <h3 style="margin-bottom:16px;">Order Summary</h3>
+    {% for item in order.items.all %}
+      <div class="os-item"><span>{{ item.product_name }} &times; {{ item.quantity }}</span><span>&#8377;{{ item.subtotal|floatformat:0 }}</span></div>
+    {% endfor %}
+    <div class="summary-row total"><span>Total</span><span>&#8377;{{ order.total_amount|floatformat:0 }}</span></div>
+    <div class="delivery-notice">Delivering to: {{ order.address }}, {{ order.city }} &ndash; {{ order.pincode }}</div>
+  </div>
+
+  <a href="{% url 'store:shop' %}" class="btn btn-primary" style="margin-top:30px;">Continue Shopping</a>
+</div>
+
+{% endblock %}

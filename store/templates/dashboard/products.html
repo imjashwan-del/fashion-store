@@ -1,0 +1,38 @@
+{% extends "dashboard/_base.html" %}
+{% block title %}Products{% endblock %}
+{% block page_title %}Products{% endblock %}
+{% block dash_content %}
+
+<div style="margin-bottom:20px;">
+  <a href="{% url 'dashboard:product_add' %}" class="dash-btn accent">+ Add Product</a>
+</div>
+
+<div class="dash-card">
+  <div class="dash-table-wrap">
+    <table class="dash-table">
+      <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        {% for product in products %}
+        <tr>
+          <td>{{ product.name }}</td>
+          <td>{{ product.category.name|default:"&mdash;" }}</td>
+          <td>&#8377;{{ product.price|floatformat:0 }}</td>
+          <td>{{ product.stock_quantity }}</td>
+          <td>{% if product.is_active %}<span class="status-pill completed">Active</span>{% else %}<span class="status-pill new">Hidden</span>{% endif %}</td>
+          <td style="display:flex; gap:8px;">
+            <a href="{% url 'dashboard:product_edit' product.id %}" class="dash-btn">Edit</a>
+            <form action="{% url 'dashboard:product_delete' product.id %}" method="post" onsubmit="return confirm('Delete this product?');">
+              {% csrf_token %}
+              <button type="submit" class="dash-btn danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">No products yet. Add your first product.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

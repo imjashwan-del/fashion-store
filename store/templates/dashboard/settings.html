@@ -1,0 +1,83 @@
+{% extends "dashboard/_base.html" %}
+{% block title %}Store Settings{% endblock %}
+{% block page_title %}Store Settings{% endblock %}
+{% block dash_content %}
+
+<p style="color:var(--dash-muted); margin-bottom:24px; max-width:640px;">
+  Everything on this page controls the public website &mdash; shop name, contact
+  details, story, images and the delivery radius. This is the single place
+  to re-brand this website for a different shop.
+</p>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <div class="dash-card">
+    <h2>Shop Identity</h2>
+    <div class="dash-form-grid">
+      <div class="form-field"><label>Shop Name</label>{{ form.shop_name }}</div>
+      <div class="form-field"><label>Tagline</label>{{ form.tagline }}</div>
+      <div class="form-field span-2"><label>Hero Subtext</label>{{ form.hero_subtext }}</div>
+      <div class="form-field"><label>Logo</label>{{ form.logo }}</div>
+      <div class="form-field"><label>Hero Image</label>{{ form.hero_image }}</div>
+    </div>
+  </div>
+
+  <div class="dash-card">
+    <h2>Contact &amp; Social</h2>
+    <div class="dash-form-grid">
+      <div class="form-field"><label>Phone</label>{{ form.phone }}</div>
+      <div class="form-field"><label>Address</label>{{ form.address }}</div>
+      <div class="form-field"><label>Instagram URL</label>{{ form.instagram_url }}</div>
+      <div class="form-field"><label>Instagram Handle</label>{{ form.instagram_handle }}</div>
+      <div class="form-field"><label>Opening Hours</label>{{ form.opening_hours }}</div>
+    </div>
+  </div>
+
+  <div class="dash-card">
+    <h2>About the Store</h2>
+    <div class="dash-form-grid">
+      <div class="form-field"><label>Owner Name</label>{{ form.owner_name }}</div>
+      <div class="form-field"><label>Founded Year</label>{{ form.founded_year }}</div>
+      <div class="form-field span-2"><label>About Text</label>{{ form.about_text }}</div>
+      <div class="form-field"><label>Owner Photo</label>{{ form.owner_image }}</div>
+      <div class="form-field"><label>Store Exterior Photo</label>{{ form.store_exterior_image }}</div>
+      <div class="form-field"><label>Store Interior Photo</label>{{ form.store_interior_image }}</div>
+      <div class="form-field"><label>New Collection Photo</label>{{ form.new_collection_image }}</div>
+      <div class="form-field"><label>Festival Display Photo</label>{{ form.festival_display_image }}</div>
+    </div>
+  </div>
+
+  <div class="dash-card">
+    <h2>Festive Offer Banner</h2>
+    <div class="dash-form-grid">
+      <div class="form-field"><label class="checkbox-row">{{ form.festive_offer_active }} Show on homepage</label></div>
+      <div class="form-field"><label>Title</label>{{ form.festive_offer_title }}</div>
+      <div class="form-field span-2"><label>Offer Text</label>{{ form.festive_offer_text }}</div>
+    </div>
+  </div>
+
+  <div class="dash-card">
+    <h2>Delivery Radius</h2>
+    <p style="font-size:13px; color:var(--dash-muted); margin-bottom:16px;">
+      Online delivery is only offered within this radius of the store's exact coordinates.
+      The distance is verified using each customer's real device location at checkout, not
+      guessed from their typed address (see the <code>store/utils.py</code> module for details).
+    </p>
+    <div class="dash-form-grid">
+      <div class="form-field"><label>Store Latitude</label>{{ form.store_latitude }}</div>
+      <div class="form-field"><label>Store Longitude</label>{{ form.store_longitude }}</div>
+      <div class="form-field"><label>Delivery Radius (KM)</label>{{ form.delivery_radius_km }}
+        <ul class="errorlist">{% for e in form.delivery_radius_km.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+      </div>
+    </div>
+    <div class="map-mini-note">
+      Tip: find your store's exact coordinates by right-clicking its location on Google Maps
+      and copying the latitude/longitude shown.
+    </div>
+  </div>
+
+  <button type="submit" class="dash-btn primary">Save Settings</button>
+</form>
+
+{% endblock %}

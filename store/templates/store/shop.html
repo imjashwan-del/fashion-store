@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Shop{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <span class="eyebrow">Full Collection</span>
+  <h1>{% if selected_category %}{{ selected_category.name }}{% else %}Shop All{% endif %}</h1>
+</div>
+
+<div class="container">
+  <div class="shop-layout">
+    <aside class="filter-panel">
+      <h4>Categories</h4>
+      <ul class="filter-list">
+        <li><a href="{% url 'store:shop' %}" class="{% if not selected_category %}active{% endif %}">All Products</a></li>
+        {% for category in categories %}
+          <li><a href="{{ category.get_absolute_url }}" class="{% if selected_category.id == category.id %}active{% endif %}">{{ category.name }}</a></li>
+        {% endfor %}
+      </ul>
+      {% if query %}
+        <h4>Search</h4>
+        <p style="font-size:13px;">Results for "{{ query }}"</p>
+      {% endif %}
+    </aside>
+
+    <div>
+      <p class="results-note">{{ products|length }} product{{ products|length|pluralize }} found</p>
+      {% if products %}
+        <div class="product-grid">
+          {% for product in products %}
+            {% include "store/_product_card.html" %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <p>No products found. Try a different category or search term.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

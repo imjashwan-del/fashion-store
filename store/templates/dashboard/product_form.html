@@ -1,0 +1,62 @@
+{% extends "dashboard/_base.html" %}
+{% block title %}{% if product %}Edit Product{% else %}Add Product{% endif %}{% endblock %}
+{% block page_title %}{% if product %}Edit Product{% else %}Add Product{% endif %}{% endblock %}
+{% block dash_content %}
+
+<div class="dash-card">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="dash-form-grid">
+      <div class="form-field">
+        <label for="{{ form.name.id_for_label }}">Product Name</label>
+        {{ form.name }}
+        <ul class="errorlist">{% for e in form.name.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+      </div>
+      <div class="form-field">
+        <label for="{{ form.slug.id_for_label }}">URL Slug</label>
+        {{ form.slug }}
+        <div class="helptext">Leave blank to auto-generate from the name.</div>
+      </div>
+
+      <div class="form-field span-2">
+        <label for="{{ form.description.id_for_label }}">Description</label>
+        {{ form.description }}
+      </div>
+
+      <div class="form-field">
+        <label for="{{ form.price.id_for_label }}">Price (&#8377;)</label>
+        {{ form.price }}
+        <ul class="errorlist">{% for e in form.price.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+      </div>
+      <div class="form-field">
+        <label for="{{ form.stock_quantity.id_for_label }}">Stock Quantity</label>
+        {{ form.stock_quantity }}
+        <ul class="errorlist">{% for e in form.stock_quantity.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+      </div>
+
+      <div class="form-field">
+        <label for="{{ form.category.id_for_label }}">Category</label>
+        {{ form.category }}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.image.id_for_label }}">Product Image</label>
+        {{ form.image }}
+        {% if product and product.image %}<div class="helptext">Current: {{ product.image.name }}</div>{% endif %}
+      </div>
+
+      <div class="form-field">
+        <label class="checkbox-row">{{ form.is_featured }} Featured on homepage</label>
+      </div>
+      <div class="form-field">
+        <label class="checkbox-row">{{ form.is_active }} Visible in shop</label>
+      </div>
+    </div>
+
+    <div style="margin-top:24px; display:flex; gap:12px;">
+      <button type="submit" class="dash-btn primary">Save Product</button>
+      <a href="{% url 'dashboard:products' %}" class="dash-btn">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

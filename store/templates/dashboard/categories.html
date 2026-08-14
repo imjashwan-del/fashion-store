@@ -1,0 +1,58 @@
+{% extends "dashboard/_base.html" %}
+{% block title %}Categories{% endblock %}
+{% block page_title %}Categories{% endblock %}
+{% block dash_content %}
+
+<div class="dash-form-grid">
+  <div class="dash-card">
+    <h2>All Categories</h2>
+    <div class="dash-table-wrap">
+      <table class="dash-table">
+        <thead><tr><th>Name</th><th>Products</th><th></th></tr></thead>
+        <tbody>
+          {% for category in categories %}
+          <tr>
+            <td>{{ category.name }}</td>
+            <td>{{ category.product_count }}</td>
+            <td>
+              <form action="{% url 'dashboard:category_delete' category.id %}" method="post" onsubmit="return confirm('Delete this category? Products in it will be uncategorized.');">
+                {% csrf_token %}
+                <button type="submit" class="dash-btn danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3">No categories yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="dash-card">
+    <h2>Add Category</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-field" style="margin-bottom:16px;">
+        <label for="{{ form.name.id_for_label }}">Name</label>
+        {{ form.name }}
+      </div>
+      <div class="form-field" style="margin-bottom:16px;">
+        <label for="{{ form.slug.id_for_label }}">URL Slug</label>
+        {{ form.slug }}
+        <div class="helptext">Leave blank to auto-generate.</div>
+      </div>
+      <div class="form-field" style="margin-bottom:16px;">
+        <label for="{{ form.image.id_for_label }}">Image</label>
+        {{ form.image }}
+      </div>
+      <div class="form-field" style="margin-bottom:20px;">
+        <label for="{{ form.display_order.id_for_label }}">Display Order</label>
+        {{ form.display_order }}
+      </div>
+      <button type="submit" class="dash-btn primary full">Add Category</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

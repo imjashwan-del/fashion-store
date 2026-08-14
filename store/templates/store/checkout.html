@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <span class="eyebrow">Almost There</span>
+  <h1>Delivery Details</h1>
+</div>
+
+<div class="container">
+  <p class="results-note" style="text-align:center; margin-bottom:30px;">
+    &#128666; Delivery is currently available only within {{ store.delivery_radius_km|floatformat:0 }} km of our store.
+  </p>
+
+  <div class="checkout-layout">
+    <div class="form-card">
+      <div class="location-status" id="locationStatus">Checking that we deliver to your location&hellip;</div>
+
+      <form method="post" id="checkoutForm">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="field-error">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="form-group">
+          <label for="{{ form.full_name.id_for_label }}">Full Name</label>
+          {{ form.full_name }}
+          {% for e in form.full_name.errors %}<div class="field-error">{{ e }}</div>{% endfor %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.phone.id_for_label }}">Phone Number</label>
+          {{ form.phone }}
+          {% for e in form.phone.errors %}<div class="field-error">{{ e }}</div>{% endfor %}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.address.id_for_label }}">Complete Delivery Address</label>
+          {{ form.address }}
+          {% for e in form.address.errors %}<div class="field-error">{{ e }}</div>{% endfor %}
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="{{ form.city.id_for_label }}">City</label>
+            {{ form.city }}
+            {% for e in form.city.errors %}<div class="field-error">{{ e }}</div>{% endfor %}
+          </div>
+          <div class="form-group">
+            <label for="{{ form.pincode.id_for_label }}">PIN Code</label>
+            {{ form.pincode }}
+            {% for e in form.pincode.errors %}<div class="field-error">{{ e }}</div>{% endfor %}
+          </div>
+        </div>
+
+        {{ form.latitude }}
+        {{ form.longitude }}
+
+        <p style="font-size:12px; color:var(--color-muted); margin-bottom:20px;">
+          We use your device's location only to confirm you're within our delivery area &mdash;
+          it is never shown publicly and is stored only with your order.
+          <a href="#" id="retryLocation" style="text-decoration:underline;">Retry location check</a>
+        </p>
+
+        <button type="submit" class="btn btn-primary btn-block" id="checkoutSubmit" disabled>Place Order</button>
+      </form>
+    </div>
+
+    <div class="order-summary-card">
+      <h3>Order Summary</h3>
+      {% for item in cart %}
+        <div class="os-item">
+          <span>{{ item.product.name }} &times; {{ item.quantity }}</span>
+          <span>&#8377;{{ item.subtotal|floatformat:0 }}</span>
+        </div>
+      {% endfor %}
+      <div class="summary-row total"><span>Total</span><span>&#8377;{{ cart.get_total|floatformat:0 }}</span></div>
+      <div class="delivery-notice">
+        Payment is not collected online. The store will contact you to confirm your order and delivery.
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'store/js/geolocation.js' %}"></script>
+{% endblock %}
